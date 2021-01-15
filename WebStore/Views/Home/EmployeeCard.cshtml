@@ -1,0 +1,29 @@
+﻿@model WebStore.Models.Employee
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+   
+</head>
+<body>
+
+
+    <div># @Model.Id</div>
+    <div>Фамилия @Model.LastName</div>
+    <div>Имя @Model.FirstName</div>
+    <div>Отчество @Model.Patronymic</div>
+    <div>Дата рождения @Model.DateBirth.ToString("dd.MM.yyyy")</div>
+    <div>Дата принятия на работу @Model.DateEmplayed.ToString("dd.MM.yyyy")</div>
+
+
+
+   
+
+
+    <hr />
+    <a href="~/Home/Employees">Все сотрудники</a>
+
+</body>
+</html>

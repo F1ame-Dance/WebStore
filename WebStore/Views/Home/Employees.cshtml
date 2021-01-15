@@ -25,7 +25,12 @@
             @foreach (var employee in Model)
             {
                 <tr>
-                    <td>@employee.Id</td>
+                    <td>
+                        <a href="~/Home/EmployeeCard?Id=@employee.Id">
+                            @employee.Id
+                        </a>
+                    </td>
+
                     <td>@employee.LastName</td>
                     <td>@employee.FirstName</td>
                     <td>@employee.Patronymic</td>
@@ -37,6 +42,9 @@
 
     <hr />
     <a href="~/">Домой</a>
+
+
+
 
 </body>
 </html>
