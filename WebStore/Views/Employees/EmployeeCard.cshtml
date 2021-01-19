@@ -1,0 +1,37 @@
+﻿
+@model WebStore.Models.Employee
+
+@{
+    Layout = "_LayoutEmployees";
+    ViewData["Title"] = $"Сотрудник #{Model.Id}";
+}
+
+<h3>Сотрудник</h3>
+
+<dl class="dl-horizontal">
+    <dt>Id</dt>
+    <dd>@Model.Id</dd>
+
+    <dt>Фамилия</dt>
+    <dd>@Model.LastName</dd>
+
+    <dt>Имя</dt>
+    <dd>@Model.FirstName</dd>
+
+    <dt>Отчество</dt>
+    <dd>@Model.Patronymic</dd>
+
+    <dt>Дата рождения</dt>
+    <dd>@Model.DateBirth.ToString("dd.MM.yyyy")</dd>
+
+    <dt>Дата принятия на работу</dt>
+    <dd>@Model.DateEmplayed.ToString("dd.MM.yyyy")</dd>
+</dl>
+
+<hr />
+
+   
+
+<a asp-action="Index" class="btn btn-default">К списку</a>
+<a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">Редактировать</a>
+<a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Удалить</a>
