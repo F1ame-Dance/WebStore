@@ -1,0 +1,23 @@
+﻿
+@model WebStore.Models.Employee
+
+@{
+    Layout = "_LayoutEmployees";
+    ViewData["Title"] = $"Сотрудник #{Model.Id}";
+}
+
+
+
+<h2>Редактирование данных сотрудника «@Model.LastName»</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.EditorForModel()
+    <input type="submit" value="Сохранить" />
+    <a asp-action="Index" class="btn btn-default">К списку</a>
+
+}
+
+<hr />
+
+
