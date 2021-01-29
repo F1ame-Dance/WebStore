@@ -7,9 +7,9 @@
     <h2>Бренды</h2>
     <div class="brands-name">
         <ul class="nav nav-pills nav-stacked">
-            @foreach (var item in Model)
+            @foreach (var item in Model.Where(b => b.ProductCount > 0))
             {
-                <li><a asp-controller="Catalog" asp-action="Index" asp-route-BarndId="@item.Id"> <span class="pull-right">(-)</span>@item.Name</a></li>
+                <li><a asp-controller="Catalog" asp-action="Index" asp-route-BarndId="@item.Id"> <span class="pull-right">(@item.ProductCount)</span>@item.Name</a></li>
             }
 
 

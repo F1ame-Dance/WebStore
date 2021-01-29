@@ -5,7 +5,7 @@
 <div class="panel-group category-products" id="accordian">
     <!--category-productsr-->
 
-    @foreach (var parent_section in Model)
+    @foreach (var parent_section in Model.Where(b => b.ProductCount > 0))
     {
         if (parent_section.ChildSections.Count > 0)
         {
