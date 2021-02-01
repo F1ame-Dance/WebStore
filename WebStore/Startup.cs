@@ -23,6 +23,7 @@ namespace WebStore
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             services.AddTransient<IProductData, SqlProductData>();
             services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddTransient<WebStoreDbInitializer>();
 
             services
                 .AddControllersWithViews()
