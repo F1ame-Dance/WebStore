@@ -28,7 +28,13 @@ namespace WebStore.Infrastructure.Services
 
 
         }
-        
+
+        public Product GetProductsById(int id)
+        {
+            return TestData.Products.Where(product => product.Id == id).FirstOrDefault();
+        }
+       
+
 
 
     }

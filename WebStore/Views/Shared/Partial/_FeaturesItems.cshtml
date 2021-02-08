@@ -3,28 +3,35 @@
 <div class="features_items">
     <!--features_items-->
     <h2 class="title text-center">Товары</h2>
+
     @if (Model is null)
     {
-        <p>Товары отсутствуют в каталоге по заданному фильтру</p>
+        <p>Товары отсутствуют в выдаче каталога по заданному фильтру</p>
     }
     else
     {
-        @foreach (var item in Model)
+        @foreach (var product in Model)
         {
             <div class="col-sm-4">
                 <div class="product-image-wrapper">
                     <div class="single-products">
                         <div class="productinfo text-center">
-                            <img src="~/images/home/@item.ImageUrl" alt="" />
-                            <h2>@item.Price.ToString("c")</h2>
-                            <p>@item.Name</p>
-                            <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>В корзину</a>
+                            <img src="~/images/shop/@product.ImageUrl" alt="" />
+                            <h2>@product.Price.ToString("c")</h2>
+                            <p><a asp-controller="Catalog" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></p>
+                            <a asp-controller="Cart" asp-action="Add" asp-route-id="@product.Id"
+                               class="btn btn-default add-to-cart">
+                                <i class="fa fa-shopping-cart"></i>В корзину
+                            </a>
                         </div>
                         <div class="product-overlay">
                             <div class="overlay-content">
-                                <h2>$56</h2>
-                                <p>@item.Name</p>
-                                <a href="#" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>В корзину</a>
+                                <h2>@product.Price.ToString("c")</h2>
+                                <p><a asp-controller="Catalog" asp-action="Details" asp-route-id="@product.Id">@product.Name</a></p>
+                                <a asp-controller="Cart" asp-action="Add" asp-route-id="@product.Id"
+                                   class="btn btn-default add-to-cart">
+                                    <i class="fa fa-shopping-cart"></i>В корзину
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -36,10 +43,7 @@
                     </div>
                 </div>
             </div>
-
         }
     }
-
-
 
 </div><!--features_items-->
