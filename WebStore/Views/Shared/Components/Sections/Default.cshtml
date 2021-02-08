@@ -5,7 +5,7 @@
 <div class="panel-group category-products" id="accordian">
     <!--category-productsr-->
 
-    @foreach (var parent_section in Model)
+    @foreach (var parent_section in Model.Where(b => b.TotalProductCount > 0))
     {
         if (parent_section.ChildSections.Count > 0)
         {
@@ -21,13 +21,15 @@
                 <div id="@parent_section.GetHashCode()" class="panel-collapse collapse">
                     <div class="panel-body">
                         <ul>
-                            @foreach (var item in parent_section.ChildSections)
+                            @foreach (var item in parent_section.ChildSections.Where(s => s.TotalProductCount > 0))
                             {
-                                <li><a asp-controller="Catalog" asp-action="Index" asp-route-SectionId="@item.Id">@item.Name </a></li>
-                            }
+                            <a asp-controller="Catalog" asp-action="Index" asp-route-SectionId="@item.Id">
+                                @item.Name
+                            </a>
+                                }
 
 
-                        </ul>
+</ul>
                     </div>
                 </div>
             </div>
