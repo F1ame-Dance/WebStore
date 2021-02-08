@@ -54,6 +54,16 @@ namespace WebStore.Controllers
         {
             if (model is null)
                 throw new ArgumentNullException(nameof(model));
+
+            if(model.FirstName == "Усама" && model.MiddleName == "Бен" && model.LastName =="Ладен")
+            {
+                ModelState.AddModelError("", "Ahtung terroristen!!!!!!!");
+            }    
+
+            if (!ModelState.IsValid)            
+                return View(model);
+            
+
             var employee = new Employee
             {
                 Id = model.Id,

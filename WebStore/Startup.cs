@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WebStore.Infrastructure.Conventions;
+using System;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Middleware;
 using WebStore.Infrastructure.Services;
@@ -13,21 +13,21 @@ namespace WebStore
 {
     public record Startup(IConfiguration Configuration)
     {
-        //private IConfiguration Configuration { get; }
-
-        //public Startup(IConfiguration Configuration)
-        //{
-        //    this.Configuration = Configuration;
-        //}
 
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
-            services.AddControllersWithViews(/*opt => opt.Conventions.Add(new TextControllerModelConvention)*/).AddRazorRuntimeCompilation();
+            services.AddTransient<IProductData, InMemoryProductData>();
+
+            services
+                .AddControllersWithViews()
+                .AddRazorRuntimeCompilation();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider services)
         {
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -44,15 +44,9 @@ namespace WebStore
 
             app.UseEndpoints(endpoints =>
             {
-                // Проекция запроса на действие
-                endpoints.MapGet("/greetings", async context =>
-                {
-                    await context.Response.WriteAsync(Configuration["Greetings"]);
-                });
-
                 endpoints.MapControllerRoute(
                     "default",
-                    "{controller=Home}/{action=Index}/{id?}");       
+                    "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
