@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -44,6 +44,9 @@ namespace WebStore.Controllers
             {
                 _Logger.LogInformation("Пользователь {0} успешно зарегистрирован", Model.UserName);
 
+
+                await _UserManager.AddToRoleAsync(user, Role.Users);
+
                 await _SignInManager.SignInAsync(user, false);
 
                 return RedirectToAction("Index", "Home");
@@ -63,8 +66,10 @@ namespace WebStore.Controllers
 
         #region Login
 
+        [AllowAnonymous]
         public IActionResult Login(string ReturnUrl) => View(new LoginViewModel { ReturnUrl = ReturnUrl });
 
+        [AllowAnonymous]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel Model)
         {

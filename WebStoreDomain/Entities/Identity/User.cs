@@ -10,7 +10,7 @@ namespace WebStore.Domain.Identity
     public class User : IdentityUser
     {
         public const string Administrator = "Admin";
-        public const string DefaultAdministratorPassword = "pwd";
+        public const string DefaultAdminPassword = "pwd";
         public string Description { get; set; }
     }
     public class Role : IdentityRole
