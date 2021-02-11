@@ -1,6 +1,4 @@
-﻿using System;
-
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -8,10 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using System;
 using WebStore.DAL.Context;
 using WebStore.Data;
-
 using WebStore.Domain.Identity;
 using WebStore.Infrastructure.Interfaces;
 using WebStore.Infrastructure.Middleware;
@@ -26,7 +23,12 @@ namespace WebStore
         public void ConfigureServices(IServiceCollection services)
         {
             //services.AddDbContext<WebStoreDB>(opt => opt.UseSqlite(Configuration.GetConnectionString("Sqlite")));
-            services.AddDbContext<WebStoreDB>(opt => opt.UseSqlServer(Configuration.GetConnectionString("Default")));
+            services.AddDbContext<WebStoreDB>(opt => opt
+                                                    .UseSqlServer(Configuration.GetConnectionString("Default"))
+                                                   // .UseLazyLoadingProxies()
+                                                    );
+
+
             services.AddTransient<WebStoreDbInitializer>();
 
             services.AddIdentity<User, Role>(/*opt => { }*/)
@@ -67,13 +69,14 @@ namespace WebStore
             services.AddTransient<IEmployeesData, InMemoryEmployeesData>();
             //services.AddTransient<IProductData, InMemoryProductData>();
             services.AddTransient<IProductData, SqlProductData>();
+            services.AddTransient<IOrderService, SqlOrderService>();
             services.AddTransient<ICartService, InCookiesCartService>();
 
             services
                .AddControllersWithViews()
                .AddRazorRuntimeCompilation();
 
-           
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, WebStoreDbInitializer db)
@@ -106,9 +109,14 @@ namespace WebStore
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                   "areas",
+                   "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+                endpoints.MapControllerRoute(
                     "default",
                     "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
 }
+
