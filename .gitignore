@@ -341,3 +341,5 @@ healthchecksdb
 /WebStore/wwwroot/lib/jquery
 /WebStore/wwwroot/js
 /WebStore/wwwroot/lib
+/WebStore/wwwroot/css/site.min.css
+/WebStore/wwwroot/css/site.css
