@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using WebStore.DAL.Context;
 
 namespace WebStore.Data
@@ -11,93 +10,104 @@ namespace WebStore.Data
     public class WebStoreDbInitializer
     {
         private readonly WebStoreDB _db;
-        private readonly ILogger<WebStoreDbInitializer> _logger;
-        public WebStoreDbInitializer(WebStoreDB db, ILogger<WebStoreDbInitializer> logger)
+        private readonly ILogger<WebStoreDbInitializer> _Logger;
+
+        public WebStoreDbInitializer(WebStoreDB db, ILogger<WebStoreDbInitializer> Logger)
         {
             _db = db;
-            _logger = logger;
-        } 
-       
+            _Logger = Logger;
+        }
+
         public void Initialize()
         {
+            var timer = Stopwatch.StartNew();
+            _Logger.LogInformation("Инициализация базы данных...");
+          
+          
+            //_db.Database.EnsureDeleted();
+            //_db.Database.EnsureCreated();
+
             var db = _db.Database;
 
-            if(db.GetPendingMigrations().Any())
+            if (db.GetPendingMigrations().Any())
             {
-                _logger.LogInformation("Начало миграции");
+                _Logger.LogInformation("Выполнение миграций...");
                 db.Migrate();
-                _logger.LogInformation("Конец миграции");
-
+                _Logger.LogInformation("Выполнение миграций выполнено успешно");
             }
             else
-            {
-                _logger.LogInformation("Актуальная версия");
-            }
+                _Logger.LogInformation("База данных находится в актуальной версии ({0:0.0###} c)",
+                    timer.Elapsed.TotalSeconds);
 
             try
             {
                 InitializeProducts();
-            }
-            catch (Exception)
-            {
 
-                _logger.LogError("Ошибка при выполнении инициализации");
-                    throw;
             }
+            catch (Exception error)
+            {
+                _Logger.LogError(error, "Ошибка при выполнении инициализации БД");
+                throw;
+            }
+
+            _Logger.LogInformation("Инициализация БД выполнена успешно {0}",
+                timer.Elapsed.TotalSeconds);
         }
 
         private void InitializeProducts()
         {
+            var timer = Stopwatch.StartNew();
 
-            if(_db.Products.Any())
+            if (_db.Products.Any())
             {
-                _logger.LogInformation("Инициализация товаров не требуется");
+                _Logger.LogInformation("Инициализация БД товарами не требуется");
                 return;
             }
-           
 
-            _logger.LogInformation("Инициализация товаров");
+            _Logger.LogInformation("Инициализация товаров...");
 
-            _logger.LogInformation("Добавление секций");
+
+            _Logger.LogInformation("Добавление секций...");
             using (_db.Database.BeginTransaction())
             {
                 _db.Sections.AddRange(TestData.Sections);
+
                 _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Sections] ON");
-
                 _db.SaveChanges();
-
                 _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Sections] OFF");
 
                 _db.Database.CommitTransaction();
             }
+            _Logger.LogInformation("Секции успешно добавлены в БД");
 
-            _logger.LogInformation("Добавление брендов");
-
+            _Logger.LogInformation("Добавление брендов...");
             using (_db.Database.BeginTransaction())
             {
                 _db.Brands.AddRange(TestData.Brands);
+
                 _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] ON");
-
                 _db.SaveChanges();
-
                 _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Brands] OFF");
 
                 _db.Database.CommitTransaction();
             }
+            _Logger.LogInformation("Бренды успешно добавлены в БД");
 
-            _logger.LogInformation("Добавление товаров");
-
+            _Logger.LogInformation("Добавление товаров...");
             using (_db.Database.BeginTransaction())
             {
                 _db.Products.AddRange(TestData.Products);
+
                 _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] ON");
-
                 _db.SaveChanges();
-
                 _db.Database.ExecuteSqlRaw("SET IDENTITY_INSERT [dbo].[Products] OFF");
 
                 _db.Database.CommitTransaction();
             }
+            _Logger.LogInformation("Товары успешно добавлены в БД");
+
+            _Logger.LogInformation("Инициализация товаров выполнена успешно ({0:0.0###})",
+                timer.Elapsed.TotalSeconds);
         }
     }
 }
